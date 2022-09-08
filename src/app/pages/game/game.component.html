@@ -21,7 +21,8 @@
     <p-button
       styleClass="ml-4"
       label="Validar"
-      (click)="validar()"
+      [disabled]="playerInput.length === 0"
+      (onClick)="validar()"
     ></p-button>
   </div>
 </ng-container>
@@ -33,7 +34,7 @@
   >
     <p-button
       label="Comenzar"
-      (click)="startRound()"
+      (onClick)="startRound()"
     ></p-button>
   </div>
 </ng-container>
