@@ -8,6 +8,7 @@ export class Level_2 extends AbstractLevelHandler {
     }
 
     level.validSymbols = "XY";
+    level.time = 750;
     return level;
   }
 

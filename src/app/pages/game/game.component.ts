@@ -42,11 +42,21 @@ export class GameComponent implements OnInit {
     this.levelDifficultHandler.setLevelParameters(this.level);
   }
 
+  private newRandomPosition(currentPosition: BoardPosition) {
+    let newPosition: BoardPosition;
+    // prevent repeat current position
+    do {
+      newPosition = generateRandomPosition(this.board);
+    } while (currentPosition && currentPosition.index === newPosition.index);
+    return newPosition;
+  }
+
   startRound(): void {
     this.nextLevel();
     this.gamming$.next(true);
     this.symbols = generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
     let currentIndex = 0;
+    let randomPosition: BoardPosition;
     const interval = setInterval(() => {
       this.clearBoard(this.board);
       if (currentIndex === this.symbols.length) {
@@ -55,7 +65,7 @@ export class GameComponent implements OnInit {
         return;
       }
       const currentSymbol = this.symbols[currentIndex];
-      const randomPosition: BoardPosition = generateRandomPosition(this.board);
+      randomPosition = this.newRandomPosition(randomPosition);
       const slot = this.board.getSlot(randomPosition);
       slot.symbol$.next(currentSymbol);
       currentIndex++;
