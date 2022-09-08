@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
-import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, generateRandomPosition } from 'src/app/models';
+import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, generateRandomPosition, LevelDifficultHandler } from 'src/app/models';
 
 @Component({
   templateUrl: './game.component.html',
@@ -16,8 +16,9 @@ export class GameComponent implements OnInit {
   readonly gamming$: BehaviorSubject<boolean>;
   readonly checking$: BehaviorSubject<boolean>;
   private symbols: Symbol[];
-  private readonly startDifficult: number = 1;
+  private readonly startDifficult: number = 0;
   private readonly size: BoardSize = { rows: 4, cols: 6 };
+  private readonly levelDifficultHandler = new LevelDifficultHandler();
 
   constructor(
     private router: Router,
@@ -36,9 +37,15 @@ export class GameComponent implements OnInit {
     }
   }
 
+  private nextLevel(): void {
+    this.level.incrementDifficult();
+    this.levelDifficultHandler.setLevelParameters(this.level);
+  }
+
   startRound(): void {
+    this.nextLevel();
     this.gamming$.next(true);
-    this.symbols = generateRandomSymbols(this.level.difficult$.value);
+    this.symbols = generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
     let currentIndex = 0;
     const interval = setInterval(() => {
       this.clearBoard(this.board);
@@ -52,10 +59,11 @@ export class GameComponent implements OnInit {
       const slot = this.board.getSlot(randomPosition);
       slot.symbol$.next(currentSymbol);
       currentIndex++;
-    }, 750);
+    }, this.level.time);
   }
 
   validar(): void {
+    const correct = this.symbols.map(s => s.value).join("").toLowerCase();
     if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
       this.messageService.add({
         severity: 'success',
@@ -64,13 +72,12 @@ export class GameComponent implements OnInit {
         life: 1000,
         closable: false,
       });
-      this.level.incrementDifficult();
     } else {
       this.messageService.add({
         severity: 'error',
-        summary: 'Auch',
-        detail: 'Perdiste',
-        life: 1000,
+        summary: 'Auch, Perdiste',
+        detail: `era ${correct.toUpperCase()}`,
+        life: 3000,
         closable: false,
       });
       this.router.navigate(["../menu"]);
@@ -81,5 +88,6 @@ export class GameComponent implements OnInit {
     this.checking$.next(false);
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }
