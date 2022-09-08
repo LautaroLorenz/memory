@@ -12,12 +12,15 @@
     class="flex py-6 p-font-family align-items-center"
   >
     <input
+      #inputElement
       type="text"
       pInputText
       class="p-inputtext-md"
       [ngClass]="{ 'uppercase': playerInput.length !== 0 }"
       placeholder="Ingrese los valores"
       [(ngModel)]="playerInput"
+      (keyup.enter)="validar()"
+      (keyup)="checkLengthValidar()"
     >
     <p-button
       styleClass="ml-4"

@@ -36,6 +36,7 @@ import { BoardComponent } from './board/board.component';
 import { CommonModule } from "@angular/common";
 import { SlotComponent } from './slot/slot.component';
 import { MessageService } from 'primeng/api';
+import { FocusTrapModule } from 'primeng/focustrap';
 
 const PrimeNgModules: any = [
   MenubarModule,
@@ -70,6 +71,7 @@ const PrimeNgModules: any = [
   ProgressBarModule,
   StepsModule,
   FileUploadModule,
+  FocusTrapModule,
 ];
 
 const SharedComponents: any = [

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
@@ -20,6 +20,8 @@ export class GameComponent implements OnInit {
   private readonly size: BoardSize = { rows: 4, cols: 6 };
   private readonly levelDifficultHandler = new LevelDifficultHandler();
   private mode!: string;
+
+  @ViewChild('inputElement', { static: false }) inputElement!: ElementRef;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -72,6 +74,10 @@ export class GameComponent implements OnInit {
     const interval = setInterval(() => {
       this.clearBoard(this.board);
       if (currentIndex === this.symbols.length) {
+        setTimeout(() => {
+          const input = this.inputElement.nativeElement as HTMLInputElement;
+          input.focus();
+        }, 50);
         this.checking$.next(true);
         clearInterval(interval);
         return;
@@ -108,6 +114,13 @@ export class GameComponent implements OnInit {
     this.playerInput = "";
     this.gamming$.next(false);
     this.checking$.next(false);
+  }
+
+  checkLengthValidar(): void {
+    const length = this.inputElement.nativeElement.value.length;
+    if(length === this.symbols.length) {
+      this.validar();
+    }
   }
 
   ngOnInit(): void {
