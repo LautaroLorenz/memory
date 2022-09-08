@@ -1,0 +1,6 @@
+<div
+  *ngIf="slot.symbol$ | async as symbol"
+  [ngClass]="{ 'active': !!symbol.value }"
+>
+  <span class="p-font-family">{{symbol.value}}</span>
+</div>

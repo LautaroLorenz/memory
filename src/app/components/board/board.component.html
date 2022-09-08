@@ -1,0 +1,7 @@
+<div class="flex" *ngFor="let item of [].constructor(board.size.rows); let row = index">
+  <ng-container
+    *ngFor="let item of [].constructor(board.size.cols); let col = index"
+  >
+    <app-slot [slot]="board.slots[(row*board.size.cols)+col]"></app-slot>
+  </ng-container>
+</div>

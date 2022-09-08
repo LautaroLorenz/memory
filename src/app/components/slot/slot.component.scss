@@ -1,0 +1,17 @@
+@import 'primeflex/primeflex.scss';
+
+:host {
+  @include styleclass('inline-flex border-1 border-300 align-items-center justify-content-center p-0 m-0');
+  width: 4em;
+  height: 4em;
+
+  .active {
+    @include styleclass('bg-primary-reverse flex align-items-center justify-content-center');
+    height: 100%;
+    width: 100%;
+  }
+
+  span {
+    font-size: 1rem;
+  }
+}
