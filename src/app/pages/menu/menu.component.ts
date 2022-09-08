@@ -27,12 +27,14 @@ export class MenuComponent implements OnInit {
   }
 
   startGaming(): void {
+    localStorage.setItem('selectedModeCode', this.selectedModeCode);
     this.messageService.clear();
   }
 
   ngOnInit(): void {
     this.ranking.aleatorio = Number(localStorage.getItem('ALEATORIO') ?? 0);
     this.ranking.incremental = Number(localStorage.getItem('INCREMENTAL') ?? 0);
+    this.selectedModeCode = localStorage.getItem('selectedModeCode') || "";
   }
 
 }
