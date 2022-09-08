@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
@@ -11,6 +11,7 @@ import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, 
 export class GameComponent implements OnInit {
 
   playerInput: string = "";
+  startWording: string = "Comenzar";
   readonly board: Board;
   readonly level: Level;
   readonly gamming$: BehaviorSubject<boolean>;
@@ -119,6 +120,7 @@ export class GameComponent implements OnInit {
         closable: false,
       });
       this.checkPoint();
+      this.startWording = "Continuar"
     } else {
       this.messageService.add({
         severity: 'error',
@@ -139,6 +141,13 @@ export class GameComponent implements OnInit {
     const length = this.inputElement.nativeElement.value.length;
     if (length === this.symbols.length) {
       this.validar();
+    }
+  }
+
+  @HostListener('window:keydown.enter', [])
+  onKeyDown() {
+    if(this.gamming$.value === false) {
+      this.startRound();
     }
   }
 
