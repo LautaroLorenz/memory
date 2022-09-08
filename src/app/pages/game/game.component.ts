@@ -69,7 +69,7 @@ export class GameComponent implements OnInit {
     const actualPoint = Number(localStorage.getItem(this.mode) ?? 0);
     if (actualPoint < this.level.difficult$.value) {
       this.messageService.add({
-        severity: 'info',
+        severity: 'success',
         summary: 'Felicitaciones',
         detail: '¡ Nuevo record !',
         closable: false,
@@ -108,7 +108,7 @@ export class GameComponent implements OnInit {
     const correct = this.symbols.map(s => s.value).join("").toLowerCase();
     if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
       this.messageService.add({
-        severity: 'success',
+        severity: 'info',
         detail: 'Ganaste la ronda',
         life: 1000,
         closable: false,
