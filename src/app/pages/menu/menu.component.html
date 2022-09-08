@@ -1,7 +1,22 @@
-<div class="h-20rem flex align-items-center justify-content-center flex-1">
+<div
+  class="h-20rem flex align-items-center justify-content-center flex-1 flex-column"
+>
+  <div class="mb-4 flex p-font-family flex-column">
+    <label class="mb-2">Modo</label>
+    <p-dropdown
+      [options]="modes"
+      [(ngModel)]="selectedModeCode"
+      optionLabel="name"
+      optionValue="code"
+      styleClass="flex w-16rem"
+    ></p-dropdown>
+  </div>
+
+
   <p-button
     label="Nuevo juego"
     routerLink="../game"
+    [queryParams]="{ 'mode': selectedModeCode }"
     styleClass="px-7 py-4"
     (click)="startGaming()"
   ></p-button>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
 import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, generateRandomPosition, LevelDifficultHandler } from 'src/app/models';
@@ -19,9 +19,11 @@ export class GameComponent implements OnInit {
   private readonly startDifficult: number = 0;
   private readonly size: BoardSize = { rows: 4, cols: 6 };
   private readonly levelDifficultHandler = new LevelDifficultHandler();
+  private mode!: string;
 
   constructor(
-    private router: Router,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
     private readonly messageService: MessageService,
   ) {
     this.board = new Board(this.size);
@@ -51,10 +53,20 @@ export class GameComponent implements OnInit {
     return newPosition;
   }
 
+  private symbolsByMode(level: Level, mode: string): Symbol[] {
+    if(mode === 'ALEATORIO') {
+      return generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
+    }
+    if(mode === 'INCREMENTAL') {
+      return this.symbols.concat(generateRandomSymbols(1, this.level.validSymbols));
+    }    
+    return [];
+  }
+
   startRound(): void {
     this.nextLevel();
     this.gamming$.next(true);
-    this.symbols = generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
+    this.symbols = this.symbolsByMode(this.level, this.mode);
     let currentIndex = 0;
     let randomPosition: BoardPosition;
     const interval = setInterval(() => {
@@ -99,5 +111,6 @@ export class GameComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.mode = this.route.snapshot.queryParamMap.get('mode') || "";
   }
 }

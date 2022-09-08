@@ -7,12 +7,16 @@ import { MenuItem, MessageService } from 'primeng/api';
 })
 export class MenuComponent implements OnInit {
 
-  items: MenuItem[] = [];
+  modes: any[] = [];
+  selectedModeCode!: string;
 
   constructor(
     private readonly messageService: MessageService,
   ) {
-    this.items = [];
+    this.modes = [
+      { name: 'ALEATORIO', code: 'ALEATORIO' },
+      { name: 'INCREMENTAL', code: 'INCREMENTAL' },
+    ];
   }
 
   startGaming(): void {
