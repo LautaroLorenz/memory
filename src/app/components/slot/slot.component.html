@@ -4,3 +4,9 @@
 >
   <span class="p-font-family font-bold">{{symbol.value}}</span>
 </div>
+
+<div
+  *ngIf="slot.animation$ | async as animation"
+  [class]="animation"
+>
+</div>

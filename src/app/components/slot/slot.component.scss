@@ -14,4 +14,36 @@
   span {
     font-size: 1rem;
   }
+
+  .rotate {
+    @include styleclass('bg-primary');
+    width: 100%;
+    height: 100%;
+    -webkit-animation: touched 500ms normal ease-in forwards;
+    animation: touched 500ms normal ease-in forwards;
+    opacity: 0;
+  }
+
+  .touched {
+    @include styleclass('bg-primary');
+    width: 100%;
+    height: 100%;
+    -webkit-animation: touched 350ms normal ease-in forwards;
+    animation: touched 350ms normal ease-in forwards;
+    opacity: 0;
+  }
+}
+
+@keyframes rotate {
+  to {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+    opacity: 1;
+  }
+}
+
+@keyframes touched {
+  to {
+    opacity: 1;
+  }
 }

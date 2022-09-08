@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CongratsComponent } from './congrats/congrats.component';
 import { GameComponent } from './game/game.component';
 import { MenuComponent } from './menu/menu.component';
+import { TouchComponent } from './touch/touch.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     component: CongratsComponent,
     path: 'congrats'
+  },
+  {
+    component: TouchComponent,
+    path: 'touch'
   }
 ];
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Board } from 'src/app/models';
 
 @Component({
@@ -10,6 +10,7 @@ import { Board } from 'src/app/models';
 export class BoardComponent implements OnInit {
 
   @Input() board!: Board;
+  @Output() slotTouch = new EventEmitter<number>();
 
   constructor() { }
 

@@ -2,6 +2,6 @@
   <ng-container
     *ngFor="let item of [].constructor(board.size.cols); let col = index"
   >
-    <app-slot [slot]="board.slots[(row*board.size.cols)+col]"></app-slot>
+    <app-slot (click)="slotTouch.emit((row*board.size.cols)+col)" [slot]="board.slots[(row*board.size.cols)+col]"></app-slot>
   </ng-container>
 </div>

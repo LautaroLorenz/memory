@@ -1,46 +1,42 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
-import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, generateRandomPosition, LevelDifficultHandler } from 'src/app/models';
+import { Board, BoardPosition, BoardSize, generateRandomPosition, Level, LevelDifficultHandler } from 'src/app/models';
 
 @Component({
-  templateUrl: './game.component.html',
-  styleUrls: ['./game.component.scss']
+  templateUrl: './touch.component.html',
+  styleUrls: ['./touch.component.scss']
 })
-export class GameComponent implements OnInit {
+export class TouchComponent implements OnInit {
 
-  playerInput: string = "";
   startWording: string = "Comenzar";
   readonly board: Board;
   readonly level: Level;
   readonly gamming$: BehaviorSubject<boolean>;
   readonly checking$: BehaviorSubject<boolean>;
   private record: boolean = false;
-  private symbols: Symbol[];
   private readonly startDifficult: number = 0;
   private readonly size: BoardSize = { rows: 4, cols: 6 };
   private readonly levelDifficultHandler = new LevelDifficultHandler();
   private mode!: string;
   private positionsHistory: BoardPosition[] = [];
-
-  @ViewChild('inputElement', { static: false }) inputElement!: ElementRef;
+  private touchCounter!: number;
 
   constructor(
-    private readonly route: ActivatedRoute,
+      private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly messageService: MessageService,
   ) {
     this.board = new Board(this.size);
     this.level = new Level(this.startDifficult);
-    this.symbols = [];
     this.gamming$ = new BehaviorSubject<boolean>(false);
     this.checking$ = new BehaviorSubject<boolean>(false);
   }
 
   private clearBoard(board: Board): void {
     for (const slot of board.slots) {
-      slot.symbol$.next(null);
+      slot.animation$.next(null);
     }
   }
 
@@ -58,20 +54,10 @@ export class GameComponent implements OnInit {
     return newPosition;
   }
 
-  private symbolsByMode(level: Level, mode: string): Symbol[] {
-    if (mode === 'ALEATORIO') {
-      return generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
-    }
-    if (mode === 'INCREMENTAL') {
-      return this.symbols.concat(generateRandomSymbols(1, this.level.validSymbols));
-    }
-    return [];
-  }
-
   private checkPoint(): void {
     const actualPoint = Number(localStorage.getItem(this.mode) ?? 0);
     if (actualPoint < this.level.difficult$.value) {
-      if(!this.record) {
+      if (!this.record) {
         this.record = true;
         this.messageService.add({
           severity: 'success',
@@ -88,53 +74,40 @@ export class GameComponent implements OnInit {
   startRound(): void {
     this.nextLevel();
     this.gamming$.next(true);
-    this.symbols = this.symbolsByMode(this.level, this.mode);
     let currentIndex = 0;
+    this.clearBoard(this.board);
     const interval = setInterval(() => {
       this.clearBoard(this.board);
-      if (currentIndex === this.symbols.length) {
-        setTimeout(() => {
-          const input = this.inputElement.nativeElement as HTMLInputElement;
-          input.focus();
-        }, 50);
+      if (currentIndex === this.level.difficult$.value) {
+        this.touchCounter = 0;
         this.checking$.next(true);
         clearInterval(interval);
         return;
       }
-      const currentSymbol = this.symbols[currentIndex];
-
       const lastPosition = this.positionsHistory[this.positionsHistory.length - 1] ?? undefined;
       const newPosition = this.newRandomPosition(lastPosition);
-      if(this.positionsHistory[currentIndex] === undefined) {
+      if (this.positionsHistory[currentIndex] === undefined) {
         this.positionsHistory.push(newPosition);
       }
-      const position = this.mode === 'INCREMENTAL' ? this.positionsHistory[currentIndex] : newPosition;
-      const slot = this.board.getSlot(position);
-
-      slot.symbol$.next(currentSymbol);
+      const slot = this.board.getSlot(this.positionsHistory[currentIndex]);
+      slot.animation$.next('rotate');
       currentIndex++;
-    }, this.level.time);
+    }, 500);
   }
 
-  validar(): void {
-    if(this.playerInput.length === 0) {
+  slotTouch(slotIndex: number): void {
+    if (!this.checking$.value) {
       return;
     }
-    const correct = this.symbols.map(s => s.value).join("").toLowerCase();
-    if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
-      this.messageService.add({
-        severity: 'info',
-        detail: 'Ganaste la ronda',
-        life: 1000,
-        closable: false,
-      });
-      this.checkPoint();
-      this.startWording = "Continuar";
-    } else {
+    this.clearBoard(this.board);
+    const position: BoardPosition = { index: slotIndex };
+    const slot = this.board.getSlot(position);
+    slot.animation$.next('touched');
+
+    if (this.positionsHistory[this.touchCounter].index !== slotIndex) {
       this.messageService.add({
         severity: 'error',
         summary: 'Auch, Perdiste',
-        detail: `respuesta ${correct.toUpperCase()}`,
         life: 3000,
         closable: false,
       });
@@ -144,23 +117,24 @@ export class GameComponent implements OnInit {
           difficult: this.level.difficult$.value
         }
       });
+    } else if (this.touchCounter === this.positionsHistory.length - 1) {
+      this.messageService.add({
+        severity: 'info',
+        detail: 'Ganaste la ronda',
+        life: 1000,
+        closable: false,
+      });
+          this.checkPoint();
+      this.startWording = "Continuar";
+      this.gamming$.next(false);
+      this.checking$.next(false);
     }
-
-    this.playerInput = "";
-    this.gamming$.next(false);
-    this.checking$.next(false);
-  }
-
-  checkLengthValidar(): void {
-    const length = this.inputElement.nativeElement.value.length;
-    if (length === this.symbols.length) {
-      this.validar();
-    }
+    this.touchCounter++;
   }
 
   @HostListener('window:keydown.enter', [])
   onKeyDown() {
-    if(this.gamming$.value === false) {
+    if (this.gamming$.value === false) {
       this.startRound();
     }
   }

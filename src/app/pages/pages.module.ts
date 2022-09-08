@@ -5,12 +5,14 @@ import { MenuComponent } from "./menu/menu.component";
 import { GameComponent } from './game/game.component';
 import { FormsModule } from "@angular/forms";
 import { CongratsComponent } from './congrats/congrats.component';
+import { TouchComponent } from './touch/touch.component';
 
 @NgModule({
   declarations: [
     MenuComponent,
     GameComponent,
     CongratsComponent,
+    TouchComponent,
   ],
   imports: [
     CommonModule,
