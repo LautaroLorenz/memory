@@ -15,6 +15,7 @@
       type="text"
       pInputText
       class="p-inputtext-md"
+      [ngClass]="{ 'uppercase': playerInput.length !== 0 }"
       placeholder="Ingrese los valores"
       [(ngModel)]="playerInput"
     >
