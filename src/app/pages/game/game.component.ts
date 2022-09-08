@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { BehaviorSubject } from 'rxjs';
 import { Board, BoardSize, Level, Symbol, generateRandomSymbols, BoardPosition, generateRandomPosition } from 'src/app/models';
 
@@ -20,6 +21,7 @@ export class GameComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private readonly messageService: MessageService,
   ) {
     this.board = new Board(this.size);
     this.level = new Level(this.startDifficult);
@@ -55,10 +57,22 @@ export class GameComponent implements OnInit {
 
   validar(): void {
     if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
-      alert("Ganaste la ronda");
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Felicitaciones',
+        detail: 'Ganaste la ronda',
+        life: 1000,
+        closable: false,
+      });
       this.level.incrementDifficult();
     } else {
-      alert("ups perdiste");
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Auch',
+        detail: 'Perdiste',
+        life: 1000,
+        closable: false,
+      });
       this.router.navigate(["../menu"]);
     }
 

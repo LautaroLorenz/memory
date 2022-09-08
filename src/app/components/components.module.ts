@@ -35,6 +35,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { BoardComponent } from './board/board.component';
 import { CommonModule } from "@angular/common";
 import { SlotComponent } from './slot/slot.component';
+import { MessageService } from 'primeng/api';
 
 const PrimeNgModules: any = [
   MenubarModule,
@@ -77,7 +78,7 @@ const SharedComponents: any = [
 ];
 
 const PrimeNgServices: any = [
-
+  MessageService
 ];
 
 @NgModule({
