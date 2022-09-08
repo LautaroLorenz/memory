@@ -9,6 +9,13 @@ export class MenuComponent implements OnInit {
 
   modes: any[] = [];
   selectedModeCode!: string;
+  ranking: {
+    aleatorio: number,
+    incremental: number,
+  } = {
+    aleatorio: 0,
+    incremental: 0
+  }
 
   constructor(
     private readonly messageService: MessageService,
@@ -24,6 +31,8 @@ export class MenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ranking.aleatorio = Number(localStorage.getItem('ALEATORIO') ?? 0);
+    this.ranking.incremental = Number(localStorage.getItem('INCREMENTAL') ?? 0);
   }
 
 }

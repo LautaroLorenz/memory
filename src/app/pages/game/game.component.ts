@@ -56,13 +56,27 @@ export class GameComponent implements OnInit {
   }
 
   private symbolsByMode(level: Level, mode: string): Symbol[] {
-    if(mode === 'ALEATORIO') {
+    if (mode === 'ALEATORIO') {
       return generateRandomSymbols(this.level.difficult$.value, this.level.validSymbols);
     }
-    if(mode === 'INCREMENTAL') {
+    if (mode === 'INCREMENTAL') {
       return this.symbols.concat(generateRandomSymbols(1, this.level.validSymbols));
-    }    
+    }
     return [];
+  }
+
+  private checkPoint(): void {
+    const actualPoint = Number(localStorage.getItem(this.mode) ?? 0);
+    if (actualPoint < this.level.difficult$.value) {
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Felicitaciones',
+        detail: '¡ Nuevo record !',
+        closable: false,
+        life: 2000
+      });
+      localStorage.setItem(this.mode, this.level.difficult$.value.toString());
+    }
   }
 
   startRound(): void {
@@ -95,11 +109,11 @@ export class GameComponent implements OnInit {
     if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
       this.messageService.add({
         severity: 'success',
-        summary: 'Felicitaciones',
         detail: 'Ganaste la ronda',
         life: 1000,
         closable: false,
       });
+      this.checkPoint();
     } else {
       this.messageService.add({
         severity: 'error',
@@ -118,7 +132,7 @@ export class GameComponent implements OnInit {
 
   checkLengthValidar(): void {
     const length = this.inputElement.nativeElement.value.length;
-    if(length === this.symbols.length) {
+    if (length === this.symbols.length) {
       this.validar();
     }
   }
