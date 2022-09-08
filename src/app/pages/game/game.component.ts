@@ -20,6 +20,7 @@ export class GameComponent implements OnInit {
   private readonly size: BoardSize = { rows: 4, cols: 6 };
   private readonly levelDifficultHandler = new LevelDifficultHandler();
   private mode!: string;
+  private positionsHistory: BoardPosition[] = [];
 
   @ViewChild('inputElement', { static: false }) inputElement!: ElementRef;
 
@@ -84,7 +85,6 @@ export class GameComponent implements OnInit {
     this.gamming$.next(true);
     this.symbols = this.symbolsByMode(this.level, this.mode);
     let currentIndex = 0;
-    let randomPosition: BoardPosition;
     const interval = setInterval(() => {
       this.clearBoard(this.board);
       if (currentIndex === this.symbols.length) {
@@ -97,8 +97,15 @@ export class GameComponent implements OnInit {
         return;
       }
       const currentSymbol = this.symbols[currentIndex];
-      randomPosition = this.newRandomPosition(randomPosition);
-      const slot = this.board.getSlot(randomPosition);
+
+      const lastPosition = this.positionsHistory[this.positionsHistory.length - 1] ?? undefined;
+      if(this.positionsHistory[currentIndex] === undefined) {
+        const newPosition = this.newRandomPosition(lastPosition);
+        this.positionsHistory.push(newPosition);
+      }
+      const position = this.mode === 'INCREMENTAL' ? this.positionsHistory[currentIndex] : this.newRandomPosition(lastPosition);
+      const slot = this.board.getSlot(position);
+
       slot.symbol$.next(currentSymbol);
       currentIndex++;
     }, this.level.time);
