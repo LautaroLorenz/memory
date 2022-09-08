@@ -87,8 +87,8 @@ export class GameComponent implements OnInit {
         severity: 'error',
         summary: 'Auch, Perdiste',
         detail: `era ${correct.toUpperCase()}`,
-        life: 3000,
-        closable: false,
+        closable: true,
+        sticky: true
       });
       this.router.navigate(["../menu"]);
     }

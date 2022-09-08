@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   templateUrl: './menu.component.html',
@@ -9,9 +9,15 @@ export class MenuComponent implements OnInit {
 
   items: MenuItem[] = [];
 
-  constructor() {
+  constructor(
+    private readonly messageService: MessageService,
+  ) {
     this.items = [];
-   }
+  }
+
+  startGaming(): void {
+    this.messageService.clear();
+  }
 
   ngOnInit(): void {
   }
