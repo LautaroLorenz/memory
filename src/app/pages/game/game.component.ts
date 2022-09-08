@@ -118,9 +118,9 @@ export class GameComponent implements OnInit {
       this.messageService.add({
         severity: 'error',
         summary: 'Auch, Perdiste',
-        detail: `era ${correct.toUpperCase()}`,
+        detail: `respuesta ${correct.toUpperCase()}`,
         closable: true,
-        sticky: true
+        life: 7000
       });
       this.router.navigate(["../menu"]);
     }
