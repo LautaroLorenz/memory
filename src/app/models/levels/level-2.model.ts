@@ -7,7 +7,7 @@ export class Level_2 extends AbstractLevelHandler {
       return super.handle(level);
     }
 
-    level.validSymbols = "FJ";
+    level.validSymbols = level.validSymbols.concat("J");
     level.time = 750;
     return level;
   }

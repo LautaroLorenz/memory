@@ -99,11 +99,9 @@ export class GameComponent implements OnInit {
       const currentSymbol = this.symbols[currentIndex];
 
       const lastPosition = this.positionsHistory[this.positionsHistory.length - 1] ?? undefined;
-      if(this.positionsHistory[currentIndex] === undefined) {
-        const newPosition = this.newRandomPosition(lastPosition);
-        this.positionsHistory.push(newPosition);
-      }
-      const position = this.mode === 'INCREMENTAL' ? this.positionsHistory[currentIndex] : this.newRandomPosition(lastPosition);
+      const newPosition = this.newRandomPosition(lastPosition);
+      this.positionsHistory.push(newPosition);
+      const position = this.mode === 'INCREMENTAL' ? this.positionsHistory[currentIndex] : newPosition;
       const slot = this.board.getSlot(position);
 
       slot.symbol$.next(currentSymbol);

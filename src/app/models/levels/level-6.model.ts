@@ -1,14 +1,13 @@
 import { Level } from "../level.model";
 import { AbstractLevelHandler } from "./level-handler.model";
 
-export class Level_4 extends AbstractLevelHandler {
+export class Level_6 extends AbstractLevelHandler {
   override handle(level: Level): Level {
-    if (level.difficult$.value !== 4) {
+    if (level.difficult$.value !== 6) {
       return super.handle(level);
     }
 
-    level.time = 850;
-    level.validSymbols = level.validSymbols.concat("K");
+    level.validSymbols = level.validSymbols.concat("T");
     return level;
   }
 
