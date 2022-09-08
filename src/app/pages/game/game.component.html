@@ -1,38 +1,46 @@
-<div class="py-4 text-xl p-font-family">
-  <span class="mr-4">Nivel:</span>
-  <span class="text-purple-500">{{level.difficult$.value}}</span>
-</div>
-<ng-container *ngIf="board.slots.length">
-  <app-board [board]="board"></app-board>
-</ng-container>
+<div class="flex flex-column justify-content-center align-items-center">
+  <div class="py-4 text-xl p-font-family">
+    <span class="mr-4">Nivel:</span>
+    <span class="text-purple-500">{{level.difficult$.value}}</span>
+  </div>
+  <ng-container *ngIf="board.slots.length">
+    <app-board [board]="board"></app-board>
+  </ng-container>
 
-<ng-container *ngIf="{ value: checking$ | async} as checking">
-  <div
-    *ngIf="checking.value"
-    class="flex py-6 p-font-family align-items-center"
-  >
-    <input
-      #inputElement
-      type="text"
-      pInputText
-      class="p-inputtext-md w-20rem"
-      [ngClass]="{ 'uppercase': playerInput.length !== 0 }"
-      placeholder="Ingrese los valores"
-      [(ngModel)]="playerInput"
-      (keyup.enter)="validar()"
-      (keyup)="checkLengthValidar()"
+  <ng-container *ngIf="{ value: checking$ | async} as checking">
+    <div
+      *ngIf="checking.value"
+      class="flex py-6 p-font-family align-items-center"
     >
-  </div>
-</ng-container>
+      <input
+        #inputElement
+        type="text"
+        pInputText
+        class="p-inputtext-md w-20rem"
+        [ngClass]="{ 'uppercase': playerInput.length !== 0 }"
+        placeholder="Ingrese los valores"
+        [(ngModel)]="playerInput"
+        (keyup.enter)="validar()"
+        (keyup)="checkLengthValidar()"
+      >
+    </div>
+  </ng-container>
 
-<ng-container *ngIf="{ value: gamming$ | async} as gamming">
-  <div
-    *ngIf="!gamming.value"
-    class="flex py-6"
-  >
-    <p-button
-      label="{{startWording}}"
-      (onClick)="startRound()"
-    ></p-button>
-  </div>
-</ng-container>
+  <ng-container *ngIf="{ value: gamming$ | async} as gamming">
+    <div
+      *ngIf="!gamming.value"
+      class="flex py-6 flex-column"
+    >
+      <p-button
+        label="{{startWording}}"
+        (onClick)="startRound()"
+        styleClass="mb-2 w-20rem"
+      ></p-button>
+      <p-button
+        label="Ir al menu"
+        styleClass="mt-2 w-20rem p-button-outlined"
+        routerLink="../menu"
+      ></p-button>
+    </div>
+  </ng-container>
+</div>

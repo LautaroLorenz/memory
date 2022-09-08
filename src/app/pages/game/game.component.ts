@@ -16,6 +16,7 @@ export class GameComponent implements OnInit {
   readonly level: Level;
   readonly gamming$: BehaviorSubject<boolean>;
   readonly checking$: BehaviorSubject<boolean>;
+  private record: boolean = false;
   private symbols: Symbol[];
   private readonly startDifficult: number = 0;
   private readonly size: BoardSize = { rows: 4, cols: 6 };
@@ -70,13 +71,16 @@ export class GameComponent implements OnInit {
   private checkPoint(): void {
     const actualPoint = Number(localStorage.getItem(this.mode) ?? 0);
     if (actualPoint < this.level.difficult$.value) {
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Felicitaciones',
-        detail: '¡ Nuevo record !',
-        closable: false,
-        life: 2000
-      });
+      if(!this.record) {
+        this.record = true;
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Felicitaciones',
+          detail: '¡ Nuevo record !',
+          closable: false,
+          life: 2000
+        });
+      }
       localStorage.setItem(this.mode, this.level.difficult$.value.toString());
     }
   }
@@ -111,6 +115,9 @@ export class GameComponent implements OnInit {
   }
 
   validar(): void {
+    if(this.playerInput.length === 0) {
+      return;
+    }
     const correct = this.symbols.map(s => s.value).join("").toLowerCase();
     if (this.symbols.map(s => s.value).join("").toLowerCase() === this.playerInput.toLowerCase()) {
       this.messageService.add({
@@ -126,10 +133,15 @@ export class GameComponent implements OnInit {
         severity: 'error',
         summary: 'Auch, Perdiste',
         detail: `respuesta ${correct.toUpperCase()}`,
-        closable: true,
-        life: 7000
+        life: 3000,
+        closable: false,
       });
-      this.router.navigate(["../menu"]);
+      this.router.navigate(["../congrats"], {
+        queryParams: {
+          record: this.record,
+          difficult: this.level.difficult$.value
+        }
+      });
     }
 
     this.playerInput = "";
