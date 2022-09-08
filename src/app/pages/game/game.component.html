@@ -15,19 +15,13 @@
       #inputElement
       type="text"
       pInputText
-      class="p-inputtext-md"
+      class="p-inputtext-md w-20rem"
       [ngClass]="{ 'uppercase': playerInput.length !== 0 }"
       placeholder="Ingrese los valores"
       [(ngModel)]="playerInput"
       (keyup.enter)="validar()"
       (keyup)="checkLengthValidar()"
     >
-    <p-button
-      styleClass="ml-4"
-      label="Validar"
-      [disabled]="playerInput.length === 0"
-      (onClick)="validar()"
-    ></p-button>
   </div>
 </ng-container>
 
