@@ -1,7 +1,7 @@
 <div class="flex flex-column justify-content-center align-items-center">
   <div class="py-4 text-xl p-font-family">
     <span class="mr-4">Nivel:</span>
-    <span class="text-purple-500">{{level.difficult$.value}}</span>
+    <span class="text-purple-500">{{level.difficult$.value || 1}}</span>
   </div>
   <ng-container *ngIf="board.slots.length">
     <app-board

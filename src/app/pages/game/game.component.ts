@@ -71,7 +71,7 @@ export class GameComponent implements OnInit {
   private checkPoint(): void {
     const actualPoint = Number(localStorage.getItem(this.mode) ?? 0);
     if (actualPoint < this.level.difficult$.value) {
-      if(!this.record) {
+      if (!this.record) {
         this.record = true;
         this.messageService.add({
           severity: 'success',
@@ -105,7 +105,7 @@ export class GameComponent implements OnInit {
 
       const lastPosition = this.positionsHistory[this.positionsHistory.length - 1] ?? undefined;
       const newPosition = this.newRandomPosition(lastPosition);
-      if(this.positionsHistory[currentIndex] === undefined) {
+      if (this.positionsHistory[currentIndex] === undefined) {
         this.positionsHistory.push(newPosition);
       }
       const position = this.mode === 'INCREMENTAL' ? this.positionsHistory[currentIndex] : newPosition;
@@ -117,7 +117,7 @@ export class GameComponent implements OnInit {
   }
 
   validar(): void {
-    if(this.playerInput.length === 0) {
+    if (this.playerInput.length === 0) {
       return;
     }
     const correct = this.symbols.map(s => s.value).join("").toLowerCase();
@@ -147,8 +147,11 @@ export class GameComponent implements OnInit {
     }
 
     this.playerInput = "";
-    this.gamming$.next(false);
     this.checking$.next(false);
+    setTimeout(() => {
+      this.gamming$.next(false);
+      this.startRound();
+    }, 500);
   }
 
   checkLengthValidar(): void {
@@ -160,7 +163,7 @@ export class GameComponent implements OnInit {
 
   @HostListener('window:keydown.enter', [])
   onKeyDown() {
-    if(this.gamming$.value === false) {
+    if (this.gamming$.value === false) {
       this.startRound();
     }
   }

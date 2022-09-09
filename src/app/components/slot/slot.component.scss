@@ -2,8 +2,8 @@
 
 :host {
   @include styleclass('inline-flex border-1 border-300 align-items-center justify-content-center p-0 m-0');
-  width: 4em;
-  height: 4em;
+  width: 3.6em;
+  height: 3.6em;
 
   .active {
     @include styleclass('bg-primary-reverse flex align-items-center justify-content-center');
@@ -12,7 +12,7 @@
   }
 
   span {
-    font-size: 1rem;
+    font-size: 28pt;
   }
 
   .rotate {

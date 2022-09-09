@@ -24,7 +24,7 @@ export class TouchComponent implements OnInit {
   private touchCounter!: number;
 
   constructor(
-      private readonly route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly messageService: MessageService,
   ) {
@@ -124,10 +124,13 @@ export class TouchComponent implements OnInit {
         life: 1000,
         closable: false,
       });
-          this.checkPoint();
+      this.checkPoint();
       this.startWording = "Continuar";
-      this.gamming$.next(false);
       this.checking$.next(false);
+      setTimeout(() => {
+        this.gamming$.next(false);
+        this.startRound();
+      }, 500);
     }
     this.touchCounter++;
   }
